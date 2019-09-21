@@ -1,12 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { SharedModule } from 'src/app/shared/shared.module';
 
-import { TableComponent } from './table/table.component';
 import { MaterialRoutingModule } from './material-routing.module';
+import { TableComponent } from './table/table.component';
 
 @NgModule({
   imports: [
-    CommonModule,
+    SharedModule,
     MaterialRoutingModule
   ],
   declarations: [
