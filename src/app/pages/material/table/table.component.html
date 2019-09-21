@@ -1,3 +1,16 @@
-<p>
-  table works!
-</p>
+<div nz-row nzGutter="16">
+
+  <!-- grid 12 -->
+  <div nz-col nzSpan="6">
+    <textarea rows="4" nz-input [(ngModel)]="inputValue"></textarea>
+    <div class="mtb-16" nz-row nzType="flex" nzJustify="end">
+      <button nz-button nzType="primary" (click)="generator()">Generator</button>
+    </div>
+  </div>
+
+  <!-- grid 12 -->
+  <div nz-col nzSpan="18">
+    <pre>{{ genCode }}</pre>
+  </div>
+
+</div>
