@@ -10,7 +10,9 @@ export class TableComponent implements OnInit {
 
   @ViewChild('highlight', { static: true }) highlight: ElementRef;
 
-  code: string;
+  codeHtml: string;
+  codeTypescript: string;
+
   form: FormGroup;
   columnList: Array<string> = [];
 
@@ -28,7 +30,8 @@ export class TableComponent implements OnInit {
     // push column name in array
     const column = this.form.get('column').value;
     this.columnList.push(column.trim());
-    this.generator();
+    this.genHtml();
+    this.genTypescript();
 
     // clear form value
     this.form.patchValue({ column: '' });
@@ -36,15 +39,16 @@ export class TableComponent implements OnInit {
 
   onDelete(column: string) {
     this.columnList = this.columnList.filter(item => item !== column);
-    this.generator();
+    this.genHtml();
+    this.genTypescript();
   }
 
-  generator() {
-    this.code = `
+  genHtml() {
+    this.codeHtml = `
     <mat-table [dataSource]="dataSource">
     `;
     this.columnList.forEach(item => {
-      this.code += `
+      this.codeHtml += `
       <!-- ${item} Column -->
       <ng-container matColumnDef="${item}">
         <mat-header-cell *matHeaderCellDef>${item}</mat-header-cell>
@@ -52,8 +56,28 @@ export class TableComponent implements OnInit {
       </ng-container>
       `;
     });
-    this.code += `
+    this.codeHtml += `
     </mat-table>
+    `;
+  }
+
+  genTypescript() {
+    this.codeTypescript = `
+    displayedColumns = [`;
+    this.columnList.forEach(item => {
+      this.codeTypescript += `
+      '${item}',`;
+    });
+    this.codeTypescript += `
+    ];
+    `;
+    this.codeTypescript += `
+    dataSource = new MatTableDataSource<any>();
+    `;
+    this.codeTypescript += `
+    ngOnInit() {
+      this.dataSource.data = data;
+    }
     `;
   }
 
