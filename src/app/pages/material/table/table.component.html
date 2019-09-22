@@ -2,7 +2,9 @@
 
   <!-- grid 12 -->
   <div nz-col nzSpan="8">
-    <form nz-form [nzLayout]="'inline'" [formGroup]="form" (ngSubmit)="generator()">
+
+    <!-- form -->
+    <form nz-form [nzLayout]="'inline'" [formGroup]="form" (ngSubmit)="onCreate()">
       <nz-form-item>
         <nz-form-control>
           <input nz-input formControlName="column" />
@@ -10,10 +12,16 @@
       </nz-form-item>
       <nz-form-item>
         <nz-form-control>
-          <button nz-button nzType="primary">Generator</button>
+          <button nz-button nzType="primary" [disabled]="form.invalid">Create</button>
         </nz-form-control>
       </nz-form-item>
     </form>
+
+    <!-- tag -->
+    <ng-container *ngFor="let item of columnList">
+      <nz-tag class="tag" nzMode="closeable" [nzColor]="'purple'" (nzOnClose)="onDelete(item)">{{ item }}</nz-tag>
+    </ng-container>
+
   </div>
 
   <!-- grid 12 -->

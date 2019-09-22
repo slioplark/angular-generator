@@ -12,6 +12,7 @@ export class TableComponent implements OnInit {
 
   code: string;
   form: FormGroup;
+  columnList: Array<string> = [];
 
   constructor(
     private formBuilder: FormBuilder
@@ -23,13 +24,26 @@ export class TableComponent implements OnInit {
     });
   }
 
+  onCreate() {
+    // push column name in array
+    const column = this.form.get('column').value;
+    this.columnList.push(column.trim());
+    this.generator();
+
+    // clear form value
+    this.form.patchValue({ column: '' });
+  }
+
+  onDelete(column: string) {
+    this.columnList = this.columnList.filter(item => item !== column);
+    this.generator();
+  }
+
   generator() {
     this.code = `
     <mat-table [dataSource]="dataSource">
     `;
-    const value = this.form.get('column').value;
-    const colList = value ? value.split(',').map(item => item.trim()) : [];
-    colList.forEach(item => {
+    this.columnList.forEach(item => {
       this.code += `
       <!-- ${item} Column -->
       <ng-container matColumnDef="${item}">
