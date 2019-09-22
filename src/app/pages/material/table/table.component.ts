@@ -18,7 +18,9 @@ export class TableComponent implements OnInit {
   }
 
   generator() {
-    this.genCode = '';
+    this.genCode = `
+    <mat-table [dataSource]="dataSource">
+    `;
     const colList = this.inputValue ? this.inputValue.split(',').map(item => item.trim()) : [];
     colList.forEach(item => {
       this.genCode += `
@@ -29,6 +31,9 @@ export class TableComponent implements OnInit {
       </ng-container>
       `;
     });
+    this.genCode += `
+    </mat-table>
+    `;
   }
 
 }
