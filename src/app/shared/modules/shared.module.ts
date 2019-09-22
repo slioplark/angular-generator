@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { FormsModule } from '@angular/forms';
+import { NgZorroAntdModule } from 'ng-zorro-antd';
+
+import { HighlightDirective } from '../directives/highlight.directive';
 
 @NgModule({
   imports: [
@@ -9,10 +11,14 @@ import { FormsModule } from '@angular/forms';
     NgZorroAntdModule,
     FormsModule
   ],
+  declarations: [
+    HighlightDirective
+  ],
   exports: [
     CommonModule,
     NgZorroAntdModule,
-    FormsModule
+    FormsModule,
+    HighlightDirective
   ]
 })
 export class SharedModule { }

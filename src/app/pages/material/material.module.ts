@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from 'src/app/shared/shared.module';
+import { SharedModule } from 'src/app/shared/modules/shared.module';
 
 import { MaterialRoutingModule } from './material-routing.module';
 import { TableComponent } from './table/table.component';

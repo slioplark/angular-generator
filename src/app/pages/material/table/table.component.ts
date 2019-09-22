@@ -1,5 +1,4 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import * as hljs from 'highlight.js';
 
 @Component({
   selector: 'app-table',
@@ -30,8 +29,6 @@ export class TableComponent implements OnInit {
       </ng-container>
       `;
     });
-    this.highlight.nativeElement.textContent = this.genCode;
-    hljs.highlightBlock(this.highlight.nativeElement);
   }
 
 }
