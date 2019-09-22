@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-table',
@@ -9,21 +10,27 @@ export class TableComponent implements OnInit {
 
   @ViewChild('highlight', { static: true }) highlight: ElementRef;
 
-  genCode: string;
-  inputValue: string;
+  code: string;
+  form: FormGroup;
 
-  constructor() { }
+  constructor(
+    private formBuilder: FormBuilder
+  ) { }
 
   ngOnInit() {
+    this.form = this.formBuilder.group({
+      column: [null, [Validators.required]],
+    });
   }
 
   generator() {
-    this.genCode = `
+    this.code = `
     <mat-table [dataSource]="dataSource">
     `;
-    const colList = this.inputValue ? this.inputValue.split(',').map(item => item.trim()) : [];
+    const value = this.form.get('column').value;
+    const colList = value ? value.split(',').map(item => item.trim()) : [];
     colList.forEach(item => {
-      this.genCode += `
+      this.code += `
       <!-- ${item} Column -->
       <ng-container matColumnDef="${item}">
         <mat-header-cell *matHeaderCellDef>${item}</mat-header-cell>
@@ -31,7 +38,7 @@ export class TableComponent implements OnInit {
       </ng-container>
       `;
     });
-    this.genCode += `
+    this.code += `
     </mat-table>
     `;
   }

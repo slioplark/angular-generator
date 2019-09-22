@@ -2,15 +2,23 @@
 
   <!-- grid 12 -->
   <div nz-col nzSpan="8">
-    <textarea rows="4" nz-input [(ngModel)]="inputValue"></textarea>
-    <div class="mtb-16" nz-row nzType="flex" nzJustify="end">
-      <button nz-button nzType="primary" (click)="generator()">Generator</button>
-    </div>
+    <form nz-form [nzLayout]="'inline'" [formGroup]="form" (ngSubmit)="generator()">
+      <nz-form-item>
+        <nz-form-control>
+          <input nz-input formControlName="column" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary">Generator</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
   </div>
 
   <!-- grid 12 -->
   <div nz-col nzSpan="16">
-    <pre><code [appHighlight]="genCode" class="lang-html"></code></pre>
+    <pre><code [appHighlight]="code" class="lang-html"></code></pre>
   </div>
 
 </div>
