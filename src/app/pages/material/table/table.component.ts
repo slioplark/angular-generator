@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as hljs from 'highlight.js';
 
 @Component({
@@ -7,6 +7,8 @@ import * as hljs from 'highlight.js';
   styleUrls: ['./table.component.scss']
 })
 export class TableComponent implements OnInit {
+
+  @ViewChild('highlight', { static: true }) highlight: ElementRef;
 
   genCode: string;
   inputValue: string;
@@ -28,10 +30,8 @@ export class TableComponent implements OnInit {
       </ng-container>
       `;
     });
-    document.querySelectorAll('pre code').forEach((block) => {
-      block.textContent = this.genCode;
-      hljs.highlightBlock(block);
-    });
+    this.highlight.nativeElement.textContent = this.genCode;
+    hljs.highlightBlock(this.highlight.nativeElement);
   }
 
 }
