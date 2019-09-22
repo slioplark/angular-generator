@@ -1,7 +1,7 @@
 <div nz-row nzGutter="16">
 
   <!-- grid 12 -->
-  <div nz-col nzSpan="6">
+  <div nz-col nzSpan="8">
     <textarea rows="4" nz-input [(ngModel)]="inputValue"></textarea>
     <div class="mtb-16" nz-row nzType="flex" nzJustify="end">
       <button nz-button nzType="primary" (click)="generator()">Generator</button>
@@ -9,8 +9,8 @@
   </div>
 
   <!-- grid 12 -->
-  <div nz-col nzSpan="18">
-    <pre>{{ genCode }}</pre>
+  <div nz-col nzSpan="16">
+    <pre><code class="lang-html"></code></pre>
   </div>
 
 </div>

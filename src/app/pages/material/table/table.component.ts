@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as hljs from 'highlight.js';
 
 @Component({
   selector: 'app-table',
@@ -26,6 +27,10 @@ export class TableComponent implements OnInit {
         <mat-cell *matCellDef="let row">{{ row.${item} }}</mat-cell>
       </ng-container>
       `;
+    });
+    document.querySelectorAll('pre code').forEach((block) => {
+      block.textContent = this.genCode;
+      hljs.highlightBlock(block);
     });
   }
 

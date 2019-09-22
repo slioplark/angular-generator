@@ -34,9 +34,12 @@
             ],
             "styles": [
               "src/theme.less",
-              "src/styles.scss"
+              "src/styles.scss",
+              "./node_modules/highlight.js/styles/vs2015.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/highlight.js/lib/highlight.js"
+            ]
           },
           "configurations": {
             "production": {
