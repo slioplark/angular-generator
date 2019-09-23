@@ -1,3 +1,34 @@
-<p>
-  autocomplete works!
-</p>
+<div nz-row nzGutter="16">
+
+  <!-- grid 12 -->
+  <div nz-col nzSpan="8">
+
+    <!-- form -->
+    <form nz-form [nzLayout]="'inline'" [formGroup]="form" (ngSubmit)="onCreate()">
+      <nz-form-item>
+        <nz-form-control>
+          <input nz-input formControlName="column" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary" [disabled]="form.invalid">Create</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+
+  </div>
+
+  <!-- grid 12 -->
+  <div nz-col nzSpan="16">
+    <nz-tabset>
+      <nz-tab nzTitle="HTML">
+        <pre><code [appHighlight]="codeHtml" class="lang-html"></code></pre>
+      </nz-tab>
+      <nz-tab nzTitle="TYPESCRIPT">
+        <pre><code [appHighlight]="codeTypescript" class="lang-typescript"></code></pre>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+
+</div>
