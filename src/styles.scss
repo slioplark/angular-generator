@@ -2,24 +2,8 @@
 .ant-layout-content {
   min-height: auto;
 }
-.m-16 {
-  margin: 16px;
-}
-.mt-16 {
-  margin-top: 16px;
-}
-.mb-16 {
-  margin-bottom: 16px;
-}
-.ml-16 {
-  margin-left: 16px;
-}
-.mr-16 {
-  margin-right: 16px;
-}
-.mtb-16 {
-  margin: 16px 0;
-}
-.mlf-16 {
-  margin: 0 16px;
+.code-tabset {
+  min-height: calc(100vh - 160px);
+  padding: 0 16px;
+  border: 1px solid #e8e8e8;
 }
