@@ -17,10 +17,19 @@
       </nz-form-item>
     </form>
 
+    <!-- checkbox -->
+    <section>
+      <label nz-checkbox (ngModelChange)="onChange($event, 'sort')" [(ngModel)]="sort">sort</label>
+      <label nz-checkbox (ngModelChange)="onChange($event, 'page')" [(ngModel)]="page">page</label>
+      <label nz-checkbox (ngModelChange)="onChange($event, 'checkbox')" [(ngModel)]="checkbox">checkbox</label>
+    </section>
+
     <!-- tag -->
-    <ng-container *ngFor="let item of columnList">
-      <nz-tag class="tag" nzMode="closeable" [nzColor]="'purple'" (nzOnClose)="onDelete(item)">{{ item }}</nz-tag>
-    </ng-container>
+    <section>
+      <ng-container *ngFor="let item of columnList">
+        <nz-tag class="tag" nzMode="closeable" [nzColor]="'purple'" (nzOnClose)="onDelete(item)">{{ item }}</nz-tag>
+      </ng-container>
+    </section>
 
   </div>
 

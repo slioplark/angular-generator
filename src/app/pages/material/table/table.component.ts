@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -7,6 +7,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./table.component.scss']
 })
 export class TableComponent implements OnInit {
+
+  sort = false;
+  page = false;
+  checkbox = false;
 
   codeHtml: string;
   codeTypescript: string;
@@ -35,6 +39,14 @@ export class TableComponent implements OnInit {
     this.form.patchValue({ column: '' });
   }
 
+  onChange(event, option: string) {
+    if (option === 'sort') { this.sort = event; }
+    if (option === 'page') { this.page = event; }
+    if (option === 'checkbox') { this.checkbox = event; }
+    this.genHtml();
+    this.genTypescript();
+  }
+
   onDelete(column: string) {
     this.columnList = this.columnList.filter(item => item !== column);
     this.genHtml();
@@ -42,6 +54,7 @@ export class TableComponent implements OnInit {
   }
 
   genHtml() {
+    // add mat-table
     this.codeHtml = `
     <mat-table [dataSource]="dataSource">
     `;
@@ -57,10 +70,31 @@ export class TableComponent implements OnInit {
     this.codeHtml += `
     </mat-table>
     `;
+
+    // add  mat-paginator
+    if (this.page) {
+      this.codeHtml += `
+    <mat-paginator #paginator
+      [pageSizeOptions]="[10, 20, 30]"
+      [showFirstLastButtons]="true">
+    </mat-paginator>
+      `;
+    }
   }
 
   genTypescript() {
-    this.codeTypescript = `
+    // set string empty
+    this.codeTypescript = '';
+
+    // add paginator
+    if (this.page) {
+      this.codeTypescript += `
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+      `;
+    }
+
+    // add displayedColumns
+    this.codeTypescript += `
     displayedColumns = [`;
     this.columnList.forEach(item => {
       this.codeTypescript += `
@@ -69,6 +103,8 @@ export class TableComponent implements OnInit {
     this.codeTypescript += `
     ];
     `;
+
+    // add dataSource
     this.codeTypescript += `
     dataSource = new MatTableDataSource<any>();
     `;
