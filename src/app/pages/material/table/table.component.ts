@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { runInThisContext } from 'vm';
 
 @Component({
   selector: 'app-table',
@@ -58,9 +59,32 @@ export class TableComponent implements OnInit {
     this.codeHtml = `
     <mat-table [dataSource]="dataSource">
     `;
+
+    // add checkbox
+    if (this.checkbox) {
+      this.codeHtml += `
+      <!-- checkbox column -->
+      <ng-container matColumnDef="index">
+        <mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </mat-cell>
+      </ng-container>
+      `;
+    }
+
+    // add row
     this.columnList.forEach(item => {
       this.codeHtml += `
-      <!-- ${item} Column -->
+      <!-- ${item} column -->
       <ng-container matColumnDef="${item}">
         <mat-header-cell *matHeaderCellDef>${item}</mat-header-cell>
         <mat-cell *matCellDef="let row">{{ row.${item} }}</mat-cell>
@@ -113,6 +137,25 @@ export class TableComponent implements OnInit {
       this.dataSource.data = data;
     }
     `;
+
+    // add isAllSelected & masterToggle method
+    if (this.checkbox) {
+      this.codeTypescript += `
+    isAllSelected() {
+      const numSelected = this.selection.selected.length;
+      const numRows = this.dataSource.data.length;
+      return numSelected === numRows;
+    }
+      `;
+      this.codeTypescript += `
+    masterToggle() {
+      this.isAllSelected() ?
+          this.selection.clear() :
+          this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+      `;
+    }
+
   }
 
 }
