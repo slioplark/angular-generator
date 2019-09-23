@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from 'src/app/shared/modules/shared.module';
 
+import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 import { MaterialRoutingModule } from './material-routing.module';
 import { TableComponent } from './table/table.component';
 
@@ -10,6 +11,7 @@ import { TableComponent } from './table/table.component';
     MaterialRoutingModule
   ],
   declarations: [
+    AutocompleteComponent,
     TableComponent
   ]
 })
