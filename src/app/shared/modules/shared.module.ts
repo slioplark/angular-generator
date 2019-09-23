@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 
+import { CopyButtonComponent } from '../components/copy-button/copy-button.component';
 import { HighlightDirective } from '../directives/highlight.directive';
 
 @NgModule({
@@ -13,14 +14,16 @@ import { HighlightDirective } from '../directives/highlight.directive';
     ReactiveFormsModule
   ],
   declarations: [
-    HighlightDirective
+    HighlightDirective,
+    CopyButtonComponent
   ],
   exports: [
     CommonModule,
     NgZorroAntdModule,
     FormsModule,
+    ReactiveFormsModule,
     HighlightDirective,
-    ReactiveFormsModule
+    CopyButtonComponent
   ]
 })
 export class SharedModule { }

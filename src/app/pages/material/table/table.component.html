@@ -37,9 +37,11 @@
   <div nz-col nzSpan="16">
     <nz-tabset class="code-tabset">
       <nz-tab nzTitle="HTML">
+        <app-copy-button [code]="codeHtml"></app-copy-button>
         <pre><code [appHighlight]="codeHtml" class="lang-html"></code></pre>
       </nz-tab>
       <nz-tab nzTitle="TYPESCRIPT">
+        <app-copy-button [code]="codeTypescript"></app-copy-button>
         <pre><code [appHighlight]="codeTypescript" class="lang-typescript"></code></pre>
       </nz-tab>
     </nz-tabset>
