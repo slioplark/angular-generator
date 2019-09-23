@@ -8,8 +8,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class TableComponent implements OnInit {
 
-  @ViewChild('highlight', { static: true }) highlight: ElementRef;
-
   codeHtml: string;
   codeTypescript: string;
 
