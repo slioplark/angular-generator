@@ -81,7 +81,7 @@ export class TableComponent implements OnInit {
       `;
     }
 
-    // add row
+    // add column
     this.columnList.forEach(item => {
       this.codeHtml += `
       <!-- ${item} column -->
@@ -91,6 +91,14 @@ export class TableComponent implements OnInit {
       </ng-container>
       `;
     });
+
+    // add row
+    this.codeHtml += `
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    `;
+
+    // add mat-table
     this.codeHtml += `
     </mat-table>
     `;
