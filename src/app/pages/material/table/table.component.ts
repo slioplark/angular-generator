@@ -57,7 +57,7 @@ export class TableComponent implements OnInit {
   genHtml() {
     // add mat-table
     this.codeHtml = `
-    <mat-table [dataSource]="dataSource">
+    <mat-table [dataSource]="dataSource"${this.sort ? ' matSort' : ''}>
     `;
 
     // add checkbox
@@ -65,7 +65,7 @@ export class TableComponent implements OnInit {
       this.codeHtml += `
       <!-- checkbox column -->
       <ng-container matColumnDef="index">
-        <mat-header-cell *matHeaderCellDef>
+        <mat-header-cell *matHeaderCellDef${this.sort ? ' mat-sort-header' : ''}>
           <mat-checkbox (change)="$event ? masterToggle() : null"
                         [checked]="selection.hasValue() && isAllSelected()"
                         [indeterminate]="selection.hasValue() && !isAllSelected()">
@@ -86,7 +86,7 @@ export class TableComponent implements OnInit {
       this.codeHtml += `
       <!-- ${item} column -->
       <ng-container matColumnDef="${item}">
-        <mat-header-cell *matHeaderCellDef>${item}</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef${this.sort ? ' mat-sort-header' : ''}>${item}</mat-header-cell>
         <mat-cell *matCellDef="let row">{{ row.${item} }}</mat-cell>
       </ng-container>
       `;
@@ -109,6 +109,13 @@ export class TableComponent implements OnInit {
   genTypescript() {
     // set string empty
     this.codeTypescript = '';
+
+    // add sort
+    if (this.sort) {
+      this.codeTypescript += `
+    @ViewChild(MatSort) sort: MatSort;
+      `;
+    }
 
     // add paginator
     if (this.page) {
