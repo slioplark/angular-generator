@@ -132,6 +132,13 @@ export class TableComponent implements OnInit {
       `;
     }
 
+    // add selection
+    if (this.checkbox) {
+      this.codeTypescript += `
+    selection = new SelectionModel<any>(true, []);
+      `;
+    }
+
     // add displayedColumns
     this.codeTypescript += `
     displayedColumns = [`;
