@@ -33,6 +33,8 @@ export class TableComponent implements OnInit {
     // push column name in array
     const column = this.form.get('column').value;
     this.columnList.push(column.trim());
+
+    // generator code
     this.genHtml();
     this.genTypescript();
 
@@ -59,8 +61,11 @@ export class TableComponent implements OnInit {
   }
 
   genHtml() {
+    // set empty string
+    this.codeHtml = '';
+
     // add mat-table
-    this.codeHtml = `
+    this.codeHtml += `
     <mat-table [dataSource]="dataSource"${this.sort ? ' matSort' : ''}>
     `;
 
@@ -119,7 +124,7 @@ export class TableComponent implements OnInit {
   }
 
   genTypescript() {
-    // set string empty
+    // set empty string
     this.codeTypescript = '';
 
     // add sort
@@ -157,8 +162,7 @@ export class TableComponent implements OnInit {
     // add dataSource
     this.codeTypescript += `
     dataSource = new MatTableDataSource<any>();
-    `;
-    this.codeTypescript += `
+
     ngOnInit() {
       this.dataSource.data = data;
     }
@@ -172,8 +176,7 @@ export class TableComponent implements OnInit {
       const numRows = this.dataSource.data.length;
       return numSelected === numRows;
     }
-      `;
-      this.codeTypescript += `
+
     masterToggle() {
       this.isAllSelected() ?
           this.selection.clear() :
