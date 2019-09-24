@@ -11,6 +11,7 @@ export class AutocompleteComponent implements OnInit {
   formName: string;
   autoName: string;
 
+  code: string;
   codeHtml: string;
   codeTypescript: string;
 
@@ -31,6 +32,10 @@ export class AutocompleteComponent implements OnInit {
     this.autoName = this.formName[0].toUpperCase() + this.formName.slice(1);
     this.getHtml();
     this.getTypescript();
+  }
+
+  onMouseChange(code: string) {
+    this.code = code;
   }
 
   getHtml() {

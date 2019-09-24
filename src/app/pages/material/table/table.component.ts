@@ -12,6 +12,7 @@ export class TableComponent implements OnInit {
   page = false;
   checkbox = false;
 
+  code: string;
   codeHtml: string;
   codeTypescript: string;
 
@@ -51,6 +52,10 @@ export class TableComponent implements OnInit {
     this.columnList = this.columnList.filter(item => item !== column);
     this.genHtml();
     this.genTypescript();
+  }
+
+  onMouseChange(code: string) {
+    this.code = code;
   }
 
   genHtml() {

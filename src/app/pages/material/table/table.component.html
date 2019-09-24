@@ -35,16 +35,28 @@
 
   <!-- grid 12 -->
   <div nz-col nzSpan="16">
+
+    <!-- tab -->
     <nz-tabset class="code-tabset">
+
+      <!-- html -->
       <nz-tab nzTitle="HTML">
-        <app-copy-button [code]="codeHtml"></app-copy-button>
-        <pre><code [appHighlight]="codeHtml" class="lang-html"></code></pre>
+        <section (mouseleave)="onMouseChange('')" (mouseenter)="onMouseChange('html')">
+          <app-copy-button *ngIf="code === 'html'" [code]="codeHtml"></app-copy-button>
+          <pre><code [appHighlight]="codeHtml" class="lang-html"></code></pre>
+        </section>
       </nz-tab>
+
+      <!-- typescript -->
       <nz-tab nzTitle="TYPESCRIPT">
-        <app-copy-button [code]="codeTypescript"></app-copy-button>
-        <pre><code [appHighlight]="codeTypescript" class="lang-typescript"></code></pre>
+        <section (mouseleave)="onMouseChange('')" (mouseenter)="onMouseChange('typescript')">
+          <app-copy-button *ngIf="code === 'typescript'" [code]="codeTypescript"></app-copy-button>
+          <pre><code [appHighlight]="codeTypescript" class="lang-typescript"></code></pre>
+        </section>
       </nz-tab>
+
     </nz-tabset>
+
   </div>
 
 </div>
