@@ -72,7 +72,7 @@ export class TableComponent implements OnInit {
     // add checkbox
     if (this.checkbox) {
       this.codeHtml += `
-      <!-- checkbox column -->
+      <!-- index column -->
       <ng-container matColumnDef="index">
         <mat-header-cell *matHeaderCellDef${this.sort ? ' mat-sort-header' : ''}>
           <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -95,8 +95,8 @@ export class TableComponent implements OnInit {
       this.codeHtml += `
       <!-- ${item} column -->
       <ng-container matColumnDef="${item}">
-        <mat-header-cell *matHeaderCellDef${this.sort ? ' mat-sort-header' : ''}>${item}</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{ row.${item} }}</mat-cell>
+        <mat-header-cell *matHeaderCellDef${this.sort ? ' mat-sort-header' : ''}>{{ '${item}' }}</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{ row?.${item} }}</mat-cell>
       </ng-container>
       `;
     });
@@ -148,8 +148,9 @@ export class TableComponent implements OnInit {
       `;
     }
 
-    // add displayedColumns
+    // add dataSource & displayedColumns
     this.codeTypescript += `
+    dataSource = new MatTableDataSource<any>();
     displayedColumns = [`;
     this.columnList.forEach(item => {
       this.codeTypescript += `
@@ -157,11 +158,6 @@ export class TableComponent implements OnInit {
     });
     this.codeTypescript += `
     ];
-    `;
-
-    // add dataSource
-    this.codeTypescript += `
-    dataSource = new MatTableDataSource<any>();
 
     ngOnInit() {
       this.dataSource.data = data;
