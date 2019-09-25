@@ -62,13 +62,20 @@ export class AutocompleteComponent implements OnInit {
         .pipe(
           startWith<string | any>(''),
           map(value => typeof value === 'string' ? value : value.name),
-          map(name => this.filter(name))
+          map(value => this.filter(${this.formName}List, value))
         );
     }
     `;
     this.codeTypescript += `
     display${this.autoName}Fn(value?: any): string | undefined {
       return value ? value.name : undefined;
+    }
+    `;
+
+    this.codeTypescript += `
+    filter(list: any[], value: string): string[] {
+      return this.list.filter(item =>
+        item.toLowerCase().indexOf(value.toLowerCase()) > 0);
     }
     `;
   }
