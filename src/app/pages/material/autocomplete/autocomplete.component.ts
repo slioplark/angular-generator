@@ -43,7 +43,7 @@ export class AutocompleteComponent implements OnInit {
     <mat-form-field>
       <input type="text" matInput formControlName="${this.formName}" [matAutocomplete]="auto${this.autoName}">
       <mat-autocomplete #auto${this.autoName}="matAutocomplete" [displayWith]="display${this.autoName}Fn">
-        <mat-option *ngFor="let item of list$ | async" [value]="item">
+        <mat-option *ngFor="let item of ${this.formName}List$ | async" [value]="item">
           {{ item.name }}
         </mat-option>
       </mat-autocomplete>
@@ -53,8 +53,12 @@ export class AutocompleteComponent implements OnInit {
 
   getTypescript() {
     this.codeTypescript = `
-    ngOnInit() {
-      this.list$ = this.form.get('${this.formName}').value.valueChanges
+    ${this.formName}List$: Observable<any>;
+    `;
+
+    this.codeTypescript += `
+    get${this.autoName}List() {
+      this.${this.formName}List$ = this.form.get('${this.formName}').value.valueChanges
         .pipe(
           startWith<string | any>(''),
           map(value => typeof value === 'string' ? value : value.name),
