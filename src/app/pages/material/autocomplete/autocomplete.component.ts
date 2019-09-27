@@ -76,7 +76,7 @@ export class AutocompleteComponent implements OnInit {
     this.codeTypescript += `
     filter(list: any[], value: string): string[] {
       return this.list.filter(item =>
-        item.toLowerCase().indexOf(value.toLowerCase()) > 0);
+        item.toLowerCase().indexOf(value.toLowerCase()) >= 0);
     }
     `;
   }
