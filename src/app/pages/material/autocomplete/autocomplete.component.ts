@@ -58,9 +58,10 @@ export class AutocompleteComponent implements OnInit {
 
     this.codeTypescript += `
     get${this.autoName}List() {
-      this.${this.formName}List$ = this.form.get('${this.formName}').value.valueChanges
+      this.${this.formName}List$ = this.form.get('${this.formName}').valueChanges
         .pipe(
           startWith<string | any>(''),
+          debounceTime(300),
           map(value => typeof value === 'string' ? value : value.name),
           map(value => this.filter(${this.formName}List, value))
         );
