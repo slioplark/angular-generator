@@ -13,7 +13,9 @@ export class FormComponent implements OnInit {
   codeTypescript: string;
 
   form: FormGroup;
+  formType: string;
   formName: string;
+  autoName: string;
 
   constructor(
     private formBuilder: FormBuilder
@@ -27,7 +29,9 @@ export class FormComponent implements OnInit {
   }
 
   onCreate() {
+    this.formType = this.form.get('type').value;
     this.formName = this.form.get('name').value.trim();
+    this.autoName = this.formName[0].toUpperCase() + this.formName.slice(1);
     this.getHtml();
     this.getTypescript();
   }
@@ -39,11 +43,30 @@ export class FormComponent implements OnInit {
   getHtml() {
     this.codeHtml = `
     <form [formGroup]="form">
+    `;
 
+    if (this.formType === 'input') {
+      this.codeHtml += `
       <mat-form-field>
         <input matInput formControlName="${this.formName}">
       </mat-form-field>
+      `;
+    }
 
+    if (this.formType === 'autocomplete') {
+      this.codeHtml += `
+      <mat-form-field>
+        <input type="text" matInput formControlName="${this.formName}" [matAutocomplete]="auto${this.autoName}">
+        <mat-autocomplete #auto${this.autoName}="matAutocomplete" [displayWith]="display${this.autoName}Fn">
+          <mat-option *ngFor="let item of ${this.formName}List$ | async" [value]="item">
+            {{ item.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      `;
+    }
+
+    this.codeHtml += `
     </form>
     `;
   }
@@ -58,10 +81,37 @@ export class FormComponent implements OnInit {
 
     ngOnInit() {
       this.form = this.formBuilder.group({
-        column: [null, [Validators.required]],
+        ${this.formName}: [null, [Validators.required]],
       });
     }
     `;
+
+    if (this.formType === 'autocomplete') {
+      this.codeTypescript += `
+    get${this.autoName}List() {
+      this.${this.formName}List$ = this.form.get('${this.formName}').valueChanges
+        .pipe(
+          startWith<string | any>(''),
+          debounceTime(300),
+          map(value => typeof value === 'string' ? value : value.name),
+          map(value => this.filter(${this.formName}List, value))
+        );
+    }
+      `;
+
+      this.codeTypescript += `
+    display${this.autoName}Fn(value?: any): string | undefined {
+      return value ? value.name : undefined;
+    }
+      `;
+
+      this.codeTypescript += `
+    filter(list: any[], value: string): string[] {
+      return this.list.filter(item =>
+        item.toLowerCase().indexOf(value.toLowerCase()) >= 0);
+    }
+      `;
+    }
   }
 
 }
