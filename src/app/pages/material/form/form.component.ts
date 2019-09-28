@@ -21,12 +21,13 @@ export class FormComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      column: [null, [Validators.required]],
+      name: [null, [Validators.required]],
+      type: [null, [Validators.required]]
     });
   }
 
   onCreate() {
-    this.formName = this.form.get('column').value.trim();
+    this.formName = this.form.get('name').value.trim();
     this.getHtml();
     this.getTypescript();
   }
