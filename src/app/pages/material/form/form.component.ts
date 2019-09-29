@@ -58,11 +58,22 @@ export class FormComponent implements OnInit {
     if (this.formType === 'select') {
       this.codeHtml += `
       <mat-form-field>
-        <mat-select placeholder="Choose">
+        <mat-select formControlName="${this.formName}">
           <mat-option *ngFor="let item of ${this.formName}List" [value]="item">
             {{ item.name }}
           </mat-option>
         </mat-select>
+      </mat-form-field>
+      `;
+    }
+
+    // datepicker type
+    if (this.formType === 'datepicker') {
+      this.codeHtml += `
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker" formControlName="${this.formName}">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
       `;
     }
