@@ -45,6 +45,7 @@ export class FormComponent implements OnInit {
     <form [formGroup]="form">
     `;
 
+    // input type
     if (this.formType === 'input') {
       this.codeHtml += `
       <mat-form-field>
@@ -53,6 +54,20 @@ export class FormComponent implements OnInit {
       `;
     }
 
+    // select type
+    if (this.formType === 'select') {
+      this.codeHtml += `
+      <mat-form-field>
+        <mat-select placeholder="Choose">
+          <mat-option *ngFor="let item of ${this.formName}List" [value]="item">
+            {{ item.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      `;
+    }
+
+    // autocomplete type
     if (this.formType === 'autocomplete') {
       this.codeHtml += `
       <mat-form-field>
@@ -86,6 +101,7 @@ export class FormComponent implements OnInit {
     }
     `;
 
+    // autocomplete type
     if (this.formType === 'autocomplete') {
       this.codeTypescript += `
     get${this.autoName}List() {
