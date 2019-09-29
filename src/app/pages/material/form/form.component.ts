@@ -26,6 +26,7 @@ export class FormComponent implements OnInit {
       name: [null, [Validators.required]],
       type: [null, [Validators.required]]
     });
+    this.form.get('type').patchValue('select');
   }
 
   onCreate() {
