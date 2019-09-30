@@ -16,6 +16,7 @@ export class FormComponent implements OnInit {
   formType: string;
   formName: string;
   autoName: string;
+  columnList: Array<any> = [];
 
   constructor(
     private formBuilder: FormBuilder
@@ -30,116 +31,173 @@ export class FormComponent implements OnInit {
   }
 
   onCreate() {
+    // push column name in array
     this.formType = this.form.get('type').value;
     this.formName = this.form.get('name').value.trim();
     this.autoName = this.formName[0].toUpperCase() + this.formName.slice(1);
-    this.getHtml();
-    this.getTypescript();
+    this.columnList.push({
+      formType: this.formType,
+      formName: this.formName,
+      autoName: this.autoName
+    });
+
+    // generator code
+    this.genHtml();
+    this.genTypescript();
+
+    // clear form value
+    this.form.patchValue({ name: '' });
+  }
+
+  onDelete(column: string) {
+    this.columnList = this.columnList.filter(item => item !== column);
+    this.genHtml();
+    this.genTypescript();
   }
 
   onMouseChange(code: string) {
     this.code = code;
   }
 
-  getHtml() {
+  genHtml() {
     this.codeHtml = `
     <form [formGroup]="form">
     `;
 
-    // input type
-    if (this.formType === 'input') {
-      this.codeHtml += `
-      <mat-form-field>
-        <input matInput formControlName="${this.formName}">
-      </mat-form-field>
-      `;
-    }
+    this.columnList.forEach(item => {
+      // input type
+      if (item.formType === 'input') {
+        this.codeHtml += this.getInputHtmlTemplate(item.formName);
+      }
 
-    // select type
-    if (this.formType === 'select') {
-      this.codeHtml += `
-      <mat-form-field>
-        <mat-select formControlName="${this.formName}">
-          <mat-option *ngFor="let item of ${this.formName}List" [value]="item">
-            {{ item.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      `;
-    }
+      // select type
+      if (item.formType === 'select') {
+        this.codeHtml += this.getSelectHtmlTemplate(item.formName);;
+      }
 
-    // datepicker type
-    if (this.formType === 'datepicker') {
-      this.codeHtml += `
-      <mat-form-field>
-        <input matInput [matDatepicker]="picker" formControlName="${this.formName}">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-      `;
-    }
+      // autocomplete type
+      if (item.formType === 'autocomplete') {
+        this.codeHtml += this.getAutoHtmlTemplate(item.formName, item.autoName);
+      }
 
-    // autocomplete type
-    if (this.formType === 'autocomplete') {
-      this.codeHtml += `
-      <mat-form-field>
-        <input type="text" matInput formControlName="${this.formName}" [matAutocomplete]="auto${this.autoName}">
-        <mat-autocomplete #auto${this.autoName}="matAutocomplete" [displayWith]="display${this.autoName}Fn">
-          <mat-option *ngFor="let item of ${this.formName}List$ | async" [value]="item">
-            {{ item.name }}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-      `;
-    }
+      // datepicker type
+      if (item.formType === 'datepicker') {
+        this.codeHtml += this.getDatepickerHtmlTemplate(item.formName);
+      }
+    });
 
     this.codeHtml += `
     </form>
     `;
   }
 
-  getTypescript() {
+  genTypescript() {
     this.codeTypescript = `
     form: FormGroup;
 
     constructor(
       private formBuilder: FormBuilder
     ) { }
+    `;
 
+    // form column list
+    this.codeTypescript += `
     ngOnInit() {
-      this.form = this.formBuilder.group({
-        ${this.formName}: [null, [Validators.required]],
+      this.form = this.formBuilder.group({`;
+
+    this.columnList.forEach(item => {
+      this.codeTypescript += `
+        ${item.formName}: [null, [Validators.required]],`;
+    });
+
+    this.codeTypescript += `
       });
     }
     `;
 
     // autocomplete type
-    if (this.formType === 'autocomplete') {
-      this.codeTypescript += `
-    get${this.autoName}List() {
-      this.${this.formName}List$ = this.form.get('${this.formName}').valueChanges
+    this.columnList.filter(item => item.formType === 'autocomplete').forEach((item, index) => {
+      this.codeTypescript += this.getAutoTsTemplate(item.formName, item.autoName);
+      if (index === this.columnList.length - 1) {
+        this.codeTypescript += this.getFilterTsTemplate();
+      }
+    });
+  }
+
+  getInputHtmlTemplate(formName: string) {
+    return `
+    <!-- ${formName} column -->
+    <mat-form-field>
+      <input matInput formControlName="${formName}">
+    </mat-form-field>
+    `;
+  }
+
+  getSelectHtmlTemplate(formName: string) {
+    return `
+    <!-- ${formName} column -->
+    <mat-form-field>
+      <mat-select formControlName="${formName}">
+        <mat-option *ngFor="let item of ${formName}List" [value]="item">
+          {{ item?.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    `;
+  }
+
+  getAutoHtmlTemplate(formName: string, autoName: string) {
+    return `
+    <!-- ${formName} column -->
+    <mat-form-field>
+      <input type="text" matInput formControlName="${formName}" [matAutocomplete]="auto${autoName}">
+      <mat-autocomplete #auto${autoName}="matAutocomplete" [displayWith]="display${autoName}Fn">
+        <mat-option *ngFor="let item of ${formName}List$ | async" [value]="item">
+          {{ item?.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    `;
+  }
+
+  getDatepickerHtmlTemplate(formName: string) {
+    return `
+    <!-- ${formName} column -->
+    <mat-form-field>
+      <input matInput [matDatepicker]="picker" formControlName="${formName}">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    `;
+  }
+
+  getAutoTsTemplate(formName: string, autoName: string) {
+    return `
+    display${autoName}Fn(value?: any): string | undefined {
+      return value ? value.name : undefined;
+    }
+
+    get${autoName}List() {
+      this.${formName}List$ = this.form.get('${formName}').valueChanges
         .pipe(
           startWith<string | any>(''),
           debounceTime(300),
           map(value => typeof value === 'string' ? value : value.name),
-          map(value => this.filter(${this.formName}List, value))
+          map(value => this.filter(${formName}List, value))
         );
     }
-      `;
+    `;
+  }
 
-      this.codeTypescript += `
-    display${this.autoName}Fn(value?: any): string | undefined {
-      return value ? value.name : undefined;
-    }
-      `;
-
-      this.codeTypescript += `
+  getFilterTsTemplate() {
+    return `
     filter(list: any[], value: string): string[] {
       return this.list.filter(item =>
-        item.toLowerCase().indexOf(value.toLowerCase()) >= 0);
+        item.toLowerCase().indexOf(value.toLowerCase()) >= 0
+      );
     }
-      `;
-    }
+    `;
   }
 
 }
+
