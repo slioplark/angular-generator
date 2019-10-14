@@ -1,3 +1,54 @@
-<p>
-  swagger works!
-</p>
+<div nz-row nzGutter="16">
+
+  <!-- grid 11 -->
+  <div nz-col nzSpan="11">
+
+    <!-- form -->
+    <form nz-form [formGroup]="form">
+      <textarea formControlName="json"></textarea>
+    </form>
+
+  </div>
+
+  <!-- grid 2 -->
+  <div nz-col nzSpan="2" class="button-grid">
+    <button nz-button nzType="primary" nzShape="circle" (click)="onCreate()">
+      <i nz-icon nzType="right" nzTheme="outline"></i>
+    </button>
+  </div>
+
+  <!-- grid 11 -->
+  <div nz-col nzSpan="11">
+
+    <!-- tab -->
+    <nz-tabset class="code-tabset">
+
+      <!-- mock -->
+      <nz-tab nzTitle="MOCK">
+        <section (mouseleave)="onMouseChange('')" (mouseenter)="onMouseChange('mock')">
+          <app-copy-button *ngIf="code === 'mock'" [code]="codeMock"></app-copy-button>
+          <pre><code [appHighlight]="codeMock" class="lang-typescript"></code></pre>
+        </section>
+      </nz-tab>
+
+      <!-- model -->
+      <nz-tab nzTitle="MODEL">
+        <section (mouseleave)="onMouseChange('')" (mouseenter)="onMouseChange('model')">
+          <app-copy-button *ngIf="code === 'model'" [code]="codeModel"></app-copy-button>
+          <pre><code [appHighlight]="codeModel" class="lang-typescript"></code></pre>
+        </section>
+      </nz-tab>
+
+      <!-- service -->
+      <nz-tab nzTitle="SERVICE">
+        <section (mouseleave)="onMouseChange('')" (mouseenter)="onMouseChange('service')">
+          <app-copy-button *ngIf="code === 'service'" [code]="codeService"></app-copy-button>
+          <pre><code [appHighlight]="codeService" class="lang-typescript"></code></pre>
+        </section>
+      </nz-tab>
+
+    </nz-tabset>
+
+  </div>
+
+</div>
