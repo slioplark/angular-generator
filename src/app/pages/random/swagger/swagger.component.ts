@@ -81,7 +81,6 @@ export class SwaggerComponent implements OnInit {
 
 }
 
-
 export class SwaggerVo {
   swagger?: any;
   info?: any;
