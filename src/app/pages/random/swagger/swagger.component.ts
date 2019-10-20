@@ -13,6 +13,8 @@ export class SwaggerComponent implements OnInit {
   codeModel: string;
   codeService: string;
 
+  typeMock: object;
+
   form: FormGroup;
 
   constructor(
@@ -26,7 +28,9 @@ export class SwaggerComponent implements OnInit {
   }
 
   onCreate() {
-    const mockList = this.getMockList();
+    this.typeMock = {};
+    this.getMockList();
+    console.log(this.typeMock);
   }
 
   onMouseChange(code: string) {
@@ -41,7 +45,6 @@ export class SwaggerComponent implements OnInit {
 
     // definition object
     const defObj = JSON.parse(json).definitions;
-    const defMock = {};
     Object.keys(defObj).map(defKey => {
       const propObj = defObj[defKey].properties;
       const propMock = {};
@@ -72,10 +75,8 @@ export class SwaggerComponent implements OnInit {
             break;
         }
       });
-      defMock[defKey] = propMock;
+      this.typeMock[defKey] = propMock;
     });
-
-    return defMock;
 
   }
 
