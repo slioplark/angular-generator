@@ -8,7 +8,14 @@
       </a>
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="Material" nzIcon="dashboard">
+      <li nz-submenu nzOpen nzTitle="Angular" nzIcon="dashboard">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/angular/life-cycle">Life Cycle</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzOpen nzTitle="Material" nzIcon="google">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/material/form">Form</a>
@@ -18,7 +25,7 @@
           </li>
         </ul>
       </li>
-      <li nz-submenu nzOpen nzTitle="Random" nzIcon="form">
+      <li nz-submenu nzOpen nzTitle="Random" nzIcon="area-chart">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/random/swagger">Swagger</a>
