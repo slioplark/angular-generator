@@ -24,8 +24,12 @@ export class LifeCycleComponent implements OnInit {
                                                OnDestroy {
     `;
     this.codeTypescript += `
+      @Input() time: string;
+    `;
+    this.codeTypescript += `
       ngOnChanges(changes: SimpleChanges) {
         console.log('OnChanges');
+        if(changes['time'] && changes['time'].currentValue) { }
       }
     `;
     this.codeTypescript += `
