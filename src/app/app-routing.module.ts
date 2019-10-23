@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '' },
+  { path: 'angular', loadChildren: () => import('./pages/angular/angular.module').then(m => m.AngularModule) },
   { path: 'material', loadChildren: () => import('./pages/material/material.module').then(m => m.MaterialModule) },
   { path: 'random', loadChildren: () => import('./pages/random/random.module').then(m => m.RandomModule) }
 ];

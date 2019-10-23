@@ -1,7 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [];
+import { LifeCycleComponent } from './life-cycle/life-cycle.component';
+
+const routes: Routes = [
+  { path: 'lifeCycle', component: LifeCycleComponent }
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
