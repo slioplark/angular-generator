@@ -13,7 +13,9 @@ export class SwaggerComponent implements OnInit {
   codeModel: string;
   codeService: string;
 
-  typeMock: object;
+  mockObj: object;
+  modelObj: object;
+  serviceObj: object;
 
   form: FormGroup;
 
@@ -28,9 +30,9 @@ export class SwaggerComponent implements OnInit {
   }
 
   onCreate() {
-    this.typeMock = {};
+    this.mockObj = {};
     this.getMockList();
-    console.log(this.typeMock);
+    console.log(this.mockObj);
   }
 
   onMouseChange(code: string) {
@@ -46,36 +48,36 @@ export class SwaggerComponent implements OnInit {
     // definition object
     const defObj = JSON.parse(json).definitions;
     Object.keys(defObj).map(defKey => {
+      const typeObj = {};
       const propObj = defObj[defKey].properties;
-      const propMock = {};
       if (!propObj) { return; }
 
       // property object
       Object.keys(propObj).map(propKey => {
-        const propModel = propObj[propKey];
-        if (!propModel) { return; }
+        const prop = propObj[propKey];
+        if (!prop) { return; }
 
         // mock object
-        switch (propModel.type) {
+        switch (prop.type) {
           case 'array':
-            propMock[propKey] = [];
+            typeObj[propKey] = [];
             break;
           case 'boolean':
-            propMock[propKey] = true;
+            typeObj[propKey] = true;
             break;
           case 'number':
           case 'integer':
-            propMock[propKey] = (propModel.enum && propModel.enum.length > 0) ? propModel.enum[0] : 123;
+            typeObj[propKey] = (prop.enum && prop.enum.length > 0) ? prop.enum[0] : 123;
             break;
           case 'string':
-            propMock[propKey] = (propModel.format === 'date-time') ? new Date() : propKey;
+            typeObj[propKey] = (prop.format === 'date-time') ? new Date() : propKey;
             break;
           default:
-            propMock[propKey] = null;
+            typeObj[propKey] = null;
             break;
         }
       });
-      this.typeMock[defKey] = propMock;
+      this.mockObj[defKey] = typeObj;
     });
 
   }
