@@ -31,7 +31,39 @@ export class SwaggerComponent implements OnInit {
   onCreate() {
     this.mockObj = {};
     this.getMockList();
+    this.getMock();
     this.genModel();
+  }
+
+  getMock() {
+    this.codeMock = '';
+    Object.keys(this.mockObj).forEach(mockKey => {
+
+      // vo name
+      this.codeMock += `
+      export const ${mockKey}: ${mockKey} = {`;
+
+      // prop name
+      const prop = this.mockObj[mockKey];
+      Object.keys(prop).forEach(propKey => {
+        if (prop[propKey].type === 'Date') {
+          this.codeMock += `
+          ${propKey}: new Date('${prop[propKey].mock}'),`;
+        } else if (prop[propKey].type === 'string') {
+          this.codeMock += `
+          ${propKey}: '${prop[propKey].mock}',`;
+        } else {
+          this.codeMock += `
+          ${propKey}: ${prop[propKey].mock},`;
+        }
+      });
+
+      // bracket end
+      this.codeMock += `
+      };
+      `;
+
+    });
   }
 
   genModel() {
@@ -47,7 +79,7 @@ export class SwaggerComponent implements OnInit {
       Object.keys(prop).forEach(propKey => {
         if (prop[propKey].description) {
           this.codeModel += `
-          ${propKey}: ${prop[propKey].type}; // ${prop[propKey].description.split('\n').join(' ')}`;
+          ${propKey}: ${prop[propKey].type}; // ${prop[propKey].description.split('\n').join(' ').split('\r').join(' ')}`;
         } else {
           this.codeModel += `
           ${propKey}: ${prop[propKey].type};`;
@@ -87,7 +119,7 @@ export class SwaggerComponent implements OnInit {
               prop.items.$ref.split('/').pop() : prop.items.type === 'string' ?
                 'string' : prop.items.type === 'integer' ?
                   'number' : 'any';
-            typeObj[propKey] = { type: `${vo}[]`, mock: [], description: prop.description };
+            typeObj[propKey] = { type: `${vo}[]`, mock: '[]', description: prop.description };
             break;
           case 'string':
             typeObj[propKey] = (prop.format === 'date-time') ?
