@@ -6,6 +6,13 @@ form {
     resize: none;
   }
 }
+.code-tabset {
+  textarea {
+    width: 100%;
+    height: calc(100vh - 235px);
+    resize: none;
+  }
+}
 .button-grid {
   display: flex;
   justify-content: center;

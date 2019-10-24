@@ -25,25 +25,25 @@
 
       <!-- mock -->
       <nz-tab nzTitle="MOCK">
-        <section (mouseleave)="onMouseChange('')" (mouseenter)="onMouseChange('mock')">
-          <app-copy-button *ngIf="code === 'mock'" [code]="codeMock"></app-copy-button>
-          <pre><code [appHighlight]="codeMock" class="lang-typescript"></code></pre>
+        <section>
+          <textarea [(ngModel)]="codeMock"></textarea>
+          <!-- <pre><code [appHighlight]="codeMock" class="lang-typescript"></code></pre> -->
         </section>
       </nz-tab>
 
       <!-- model -->
       <nz-tab nzTitle="MODEL">
-        <section (mouseleave)="onMouseChange('')" (mouseenter)="onMouseChange('model')">
-          <app-copy-button *ngIf="code === 'model'" [code]="codeModel"></app-copy-button>
-          <pre><code [appHighlight]="codeModel" class="lang-typescript"></code></pre>
+        <section>
+          <textarea [(ngModel)]="codeModel"></textarea>
+          <!-- <pre><code [appHighlight]="codeModel" class="lang-typescript"></code></pre> -->
         </section>
       </nz-tab>
 
       <!-- service -->
       <nz-tab nzTitle="SERVICE">
-        <section (mouseleave)="onMouseChange('')" (mouseenter)="onMouseChange('service')">
-          <app-copy-button *ngIf="code === 'service'" [code]="codeService"></app-copy-button>
-          <pre><code [appHighlight]="codeService" class="lang-typescript"></code></pre>
+        <section>
+          <textarea [(ngModel)]="codeService"></textarea>
+          <!-- <pre><code [appHighlight]="codeService" class="lang-typescript"></code></pre> -->
         </section>
       </nz-tab>
 

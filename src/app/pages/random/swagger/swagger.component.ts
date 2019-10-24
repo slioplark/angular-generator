@@ -8,7 +8,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class SwaggerComponent implements OnInit {
 
-  code: string;
   codeMock: string;
   codeModel: string;
   codeService: string;
@@ -32,11 +31,31 @@ export class SwaggerComponent implements OnInit {
   onCreate() {
     this.mockObj = {};
     this.getMockList();
+    this.genModel();
     console.log(this.mockObj);
   }
 
-  onMouseChange(code: string) {
-    this.code = code;
+  genModel() {
+    this.codeModel = '';
+    Object.keys(this.mockObj).forEach(mockKey => {
+
+      // vo name
+      this.codeModel += `
+      export interface ${mockKey} {`;
+
+      // prop name
+      const prop = this.mockObj[mockKey];
+      Object.keys(prop).forEach(propKey => {
+        this.codeModel += `
+        ${propKey}: ${prop[propKey].type};`;
+      });
+
+      // bracket end
+      this.codeModel += `
+      }
+      `;
+
+    });
   }
 
   getMockList() {
