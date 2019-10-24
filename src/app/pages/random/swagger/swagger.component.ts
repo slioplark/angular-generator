@@ -60,20 +60,24 @@ export class SwaggerComponent implements OnInit {
         // mock object
         switch (prop.type) {
           case 'array':
-            typeObj[propKey] = [];
+            typeObj[propKey] = { type: 'any[]', mock: [] };
             break;
-          case 'boolean':
-            typeObj[propKey] = true;
+          case 'string':
+            typeObj[propKey] = (prop.format === 'date-time') ?
+              { type: 'Date', mock: new Date() } :
+              { type: 'string', mock: propKey };
             break;
           case 'number':
           case 'integer':
-            typeObj[propKey] = (prop.enum && prop.enum.length > 0) ? prop.enum[0] : 123;
+            typeObj[propKey] = (prop.enum && prop.enum.length > 0) ?
+              { type: 'number', mock: prop.enum[0] } :
+              { type: 'number', mock: 123 };
             break;
-          case 'string':
-            typeObj[propKey] = (prop.format === 'date-time') ? new Date() : propKey;
+          case 'boolean':
+            typeObj[propKey] = { type: 'boolean', mock: true };
             break;
           default:
-            typeObj[propKey] = null;
+            typeObj[propKey] = { type: prop.type, mock: null };
             break;
         }
       });
