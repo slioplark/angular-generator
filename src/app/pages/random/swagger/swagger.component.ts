@@ -32,7 +32,6 @@ export class SwaggerComponent implements OnInit {
     this.mockObj = {};
     this.getMockList();
     this.genModel();
-    console.log(this.mockObj);
   }
 
   genModel() {
@@ -79,7 +78,11 @@ export class SwaggerComponent implements OnInit {
         // mock object
         switch (prop.type) {
           case 'array':
-            typeObj[propKey] = { type: 'any[]', mock: [] };
+            const vo = prop.items.$ref ?
+              prop.items.$ref.split('/').pop() : prop.items.type === 'string' ?
+                'string' : prop.items.type === 'integer' ?
+                  'number' : 'any';
+            typeObj[propKey] = { type: `${vo}[]`, mock: [] };
             break;
           case 'string':
             typeObj[propKey] = (prop.format === 'date-time') ?
