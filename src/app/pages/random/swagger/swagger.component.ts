@@ -45,8 +45,13 @@ export class SwaggerComponent implements OnInit {
       // prop name
       const prop = this.mockObj[mockKey];
       Object.keys(prop).forEach(propKey => {
-        this.codeModel += `
-        ${propKey}: ${prop[propKey].type};`;
+        if (prop[propKey].description) {
+          this.codeModel += `
+          ${propKey}: ${prop[propKey].type}; // ${prop[propKey].description.split('\n').join(' ')}`;
+        } else {
+          this.codeModel += `
+          ${propKey}: ${prop[propKey].type};`;
+        }
       });
 
       // bracket end
@@ -82,24 +87,24 @@ export class SwaggerComponent implements OnInit {
               prop.items.$ref.split('/').pop() : prop.items.type === 'string' ?
                 'string' : prop.items.type === 'integer' ?
                   'number' : 'any';
-            typeObj[propKey] = { type: `${vo}[]`, mock: [] };
+            typeObj[propKey] = { type: `${vo}[]`, mock: [], description: prop.description };
             break;
           case 'string':
             typeObj[propKey] = (prop.format === 'date-time') ?
-              { type: 'Date', mock: new Date() } :
-              { type: 'string', mock: propKey };
+              { type: 'Date', mock: new Date(), description: prop.description } :
+              { type: 'string', mock: propKey, description: prop.description };
             break;
           case 'number':
           case 'integer':
             typeObj[propKey] = (prop.enum && prop.enum.length > 0) ?
-              { type: 'number', mock: prop.enum[0] } :
-              { type: 'number', mock: 123 };
+              { type: 'number', mock: prop.enum[0], description: prop.description } :
+              { type: 'number', mock: 123, description: prop.description };
             break;
           case 'boolean':
-            typeObj[propKey] = { type: 'boolean', mock: true };
+            typeObj[propKey] = { type: 'boolean', mock: true, description: prop.description };
             break;
           default:
-            typeObj[propKey] = { type: prop.type, mock: null };
+            typeObj[propKey] = { type: prop.type, mock: null, description: prop.description };
             break;
         }
       });
