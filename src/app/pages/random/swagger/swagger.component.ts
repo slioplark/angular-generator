@@ -148,9 +148,10 @@ export class SwaggerComponent implements OnInit {
         if (!prop) { return; }
 
         // detail object
+        let vo = '';
         switch (prop.type) {
           case 'array':
-            const vo = prop.items.$ref ?
+            vo = (prop.items.$ref) ?
               prop.items.$ref.split('/').pop() : prop.items.type === 'string' ?
                 'string' : prop.items.type === 'integer' ?
                   'number' : 'any';
@@ -169,7 +170,8 @@ export class SwaggerComponent implements OnInit {
             typeObj[propKey] = { type: 'boolean', mock: true, desc: prop.description };
             break;
           default:
-            typeObj[propKey] = { type: prop.type, mock: null, desc: prop.description };
+            vo = (prop.$ref) ? prop.$ref.split('/').pop() : prop.type;
+            typeObj[propKey] = { type: vo, mock: null, desc: prop.description };
             break;
         }
         if (prop.format === 'date-time') {
