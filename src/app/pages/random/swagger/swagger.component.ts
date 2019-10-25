@@ -13,7 +13,7 @@ export class SwaggerComponent implements OnInit {
   codeService: string;
 
   form: FormGroup;
-  swaggerObj: object;
+  mockObj: object;
 
   constructor(
     private formBuilder: FormBuilder
@@ -26,76 +26,108 @@ export class SwaggerComponent implements OnInit {
   }
 
   onCreate() {
-    this.swaggerObj = {};
-    this.getSwaggerObj();
-    this.genMockCode();
-    this.genModelCode();
+    this.mockObj = {};
+    this.getMockObj();
+    this.codeMock = this.genMockCode();
+    this.codeModel = this.genModelCode();
   }
 
   genMockCode() {
-    this.codeMock = '';
-    Object.keys(this.swaggerObj).forEach(mockKey => {
+
+    let code = '';
+    Object.keys(this.mockObj).forEach(mockKey => {
 
       // vo name
-      this.codeMock += `
+      code += `
       export const ${mockKey}: ${mockKey} = {`;
 
       // prop name
-      const prop = this.swaggerObj[mockKey];
+      const prop = this.mockObj[mockKey];
       Object.keys(prop).forEach(propKey => {
         switch (prop[propKey].type) {
           case 'Date':
-            this.codeMock += `
+            code += `
             ${propKey}: new Date('${prop[propKey].mock}'),`;
             break;
           case 'string':
-            this.codeMock += `
+            code += `
             ${propKey}: '${prop[propKey].mock}',`;
             break;
           default:
-            this.codeMock += `
+            code += `
             ${propKey}: ${prop[propKey].mock},`;
             break;
         }
       });
 
       // bracket end
-      this.codeMock += `
+      code += `
       };
       `;
 
     });
+
+    return code;
+
   }
 
   genModelCode() {
-    this.codeModel = '';
-    Object.keys(this.swaggerObj).forEach(mockKey => {
+
+    let code = '';
+    const list = [];
+    Object.keys(this.mockObj).forEach(mockKey => {
 
       // vo name
-      this.codeModel += `
+      code += `
       export interface ${mockKey} {`;
 
       // prop name
-      const prop = this.swaggerObj[mockKey];
+      const prop = this.mockObj[mockKey];
+
       Object.keys(prop).forEach(propKey => {
-        if (prop[propKey].description) {
-          this.codeModel += `
-          ${propKey}: ${prop[propKey].type}; // ${prop[propKey].description.split('\n').join(' ').split('\r').join(' ')}`;
-        } else {
-          this.codeModel += `
-          ${propKey}: ${prop[propKey].type};`;
-        }
+
+        const vo = propKey[0].toUpperCase() + propKey.slice(1);
+        if (prop[propKey].enum) { list.push({ name: vo, type: prop[propKey].type, enum: prop[propKey].enum }); }
+
+        const desc = (prop[propKey].desc) ? `// ${prop[propKey].desc.split('\n').join(' ').split('\r').join(' ')}` : '';
+        const type = (prop[propKey].enum) ? `${vo}Enum` : `${prop[propKey].type}`;
+        code += `
+        ${propKey}: ${type}; ${desc}`;
+
       });
 
       // bracket end
-      this.codeModel += `
+      code += `
       }
       `;
 
     });
+
+    list.forEach(item => {
+
+      // vo name
+      code += `
+      export enum ${item.name}Enum {`;
+
+      // prop name
+      item.enum.forEach(element => {
+        const value = (item.type === 'number') ? `${element}` : `'${element}'`;
+        code += `
+        _${element} = ${value},`;
+      });
+
+      // bracket end
+      code += `
+      }
+      `;
+
+    });
+
+    return code;
+
   }
 
-  getSwaggerObj() {
+  getMockObj() {
 
     // swagger string
     const json = this.form.get('json').value;
@@ -122,22 +154,22 @@ export class SwaggerComponent implements OnInit {
               prop.items.$ref.split('/').pop() : prop.items.type === 'string' ?
                 'string' : prop.items.type === 'integer' ?
                   'number' : 'any';
-            typeObj[propKey] = { type: `${vo}[]`, mock: '[]', description: prop.description };
+            typeObj[propKey] = { type: `${vo}[]`, mock: '[]', desc: prop.description };
             break;
           case 'string':
-            typeObj[propKey] = { type: 'string', mock: propKey, description: prop.description };
+            typeObj[propKey] = { type: 'string', mock: propKey, desc: prop.description };
             break;
           case 'integer':
-            typeObj[propKey] = { type: 'number', mock: 0, description: prop.description };
+            typeObj[propKey] = { type: 'number', mock: 0, desc: prop.description };
             break;
           case 'number':
-            typeObj[propKey] = { type: 'number', mock: 123, description: prop.description };
+            typeObj[propKey] = { type: 'number', mock: 123, desc: prop.description };
             break;
           case 'boolean':
-            typeObj[propKey] = { type: 'boolean', mock: true, description: prop.description };
+            typeObj[propKey] = { type: 'boolean', mock: true, desc: prop.description };
             break;
           default:
-            typeObj[propKey] = { type: prop.type, mock: null, description: prop.description };
+            typeObj[propKey] = { type: prop.type, mock: null, desc: prop.description };
             break;
         }
         if (prop.format === 'date-time') {
@@ -151,7 +183,7 @@ export class SwaggerComponent implements OnInit {
 
       });
 
-      this.swaggerObj[defKey] = typeObj;
+      this.mockObj[defKey] = typeObj;
 
     });
 
