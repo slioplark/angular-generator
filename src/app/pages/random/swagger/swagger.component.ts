@@ -30,6 +30,46 @@ export class SwaggerComponent implements OnInit {
     this.getMockObj();
     this.codeMock = this.genMockCode();
     this.codeModel = this.genModelCode();
+    this.codeService = this.genServiceCode();
+  }
+
+  genServiceCode() {
+
+    const json = this.form.get('json').value;
+    if (!json) { return; }
+
+    // path object
+    let code = '';
+    const pathObj = JSON.parse(json).paths;
+    Object.keys(pathObj).forEach(pathKey => {
+
+      const httpObj = pathObj[pathKey];
+      Object.keys(httpObj).forEach(httpKey => {
+
+        const vo = (httpKey === 'post' || 'put' || 'patch') ? ', {}' : '';
+        const url = pathKey.replace('{', '${');
+
+        const parm = [];
+        if (httpObj[httpKey].parameters) {
+          httpObj[httpKey].parameters.forEach(item => {
+            if (item.in === 'path' || 'query') { parm.push(item.name); }
+          });
+        }
+
+        code += `
+        /**
+         * ${httpObj[httpKey].summary}
+         */
+        ${httpObj[httpKey].operationId}(${parm ? parm.join(', ') : ''}): Observable<any> {
+        return this.httpClient.${ httpKey} <any>(\`${url}\`${vo});
+        }
+        `;
+      });
+
+    });
+
+    return code;
+
   }
 
   genMockCode() {
@@ -83,7 +123,6 @@ export class SwaggerComponent implements OnInit {
 
       // prop name
       const prop = this.mockObj[mockKey];
-
       Object.keys(prop).forEach(propKey => {
 
         const vo = propKey[0].toUpperCase() + propKey.slice(1);
