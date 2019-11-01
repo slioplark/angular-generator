@@ -164,7 +164,7 @@ export class SwaggerComponent implements OnInit {
             typeObj[propKey] = { type: 'number', mock: 0, desc: prop.description };
             break;
           case 'number':
-            typeObj[propKey] = { type: 'number', mock: 123, desc: prop.description };
+            typeObj[propKey] = { type: 'number', mock: Math.floor(Math.random() * 899 + 100), desc: prop.description };
             break;
           case 'boolean':
             typeObj[propKey] = { type: 'boolean', mock: true, desc: prop.description };
