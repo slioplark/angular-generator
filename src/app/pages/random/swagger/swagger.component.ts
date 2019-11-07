@@ -46,13 +46,23 @@ export class SwaggerComponent implements OnInit {
       const httpObj = pathObj[pathKey];
       Object.keys(httpObj).forEach(httpKey => {
 
-        const vo = (httpKey === 'post' || 'put' || 'patch') ? ', {}' : '';
+        let vo = (httpKey === 'post') || (httpKey === 'put') || (httpKey === 'patch') ? ', {}' : '';
         const url = pathKey.replace(/\{/g, '${');
-
         const parm = [];
         if (httpObj[httpKey].parameters) {
           httpObj[httpKey].parameters.forEach(item => {
-            if (item.in === 'path' || 'query') { parm.push(item.name); }
+            switch (item.in) {
+              case 'path':
+              case 'query':
+                parm.push(item.name);
+                break;
+              case 'body':
+                parm.push(item.name);
+                vo = `, {${item.name}}`;
+                break;
+              default:
+                break;
+            }
           });
         }
 
@@ -61,7 +71,7 @@ export class SwaggerComponent implements OnInit {
          * ${httpObj[httpKey].summary}
          */
         ${httpObj[httpKey].operationId}(${parm ? parm.join(', ') : ''}): Observable<any> {
-        return this.httpClient.${ httpKey} <any>(\`${url}\`${vo});
+          return this.httpClient.${httpKey}<any>(\`${url}\`${vo});
         }
         `;
       });
