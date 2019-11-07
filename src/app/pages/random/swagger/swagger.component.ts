@@ -47,7 +47,7 @@ export class SwaggerComponent implements OnInit {
       Object.keys(httpObj).forEach(httpKey => {
 
         const vo = (httpKey === 'post' || 'put' || 'patch') ? ', {}' : '';
-        const url = pathKey.replace('{', '${');
+        const url = pathKey.replace(/\{/g, '${');
 
         const parm = [];
         if (httpObj[httpKey].parameters) {
