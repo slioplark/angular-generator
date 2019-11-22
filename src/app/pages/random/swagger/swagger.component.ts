@@ -33,6 +33,36 @@ export class SwaggerComponent implements OnInit {
     this.codeService = this.genServiceCode();
   }
 
+  // 取得 ref 字串裡的類型名稱
+  getRefTypeName(ref: string) {
+    return ref.split('/').pop();
+  }
+
+  // 依據 swagger 類型，轉換成 TypeScript 類型
+  getTsType(parm): string {
+    switch (parm.type) {
+      case 'ref':
+        return 'any';
+      case 'array':
+        const vo = (parm.items.$ref) ? this.getRefTypeName(parm.items.$ref) : 'any';
+        return `${vo}[]`;
+      case 'integer':
+        return 'number';
+      default:
+        return parm.type;
+    }
+  }
+
+  // 依據 swagger schema，轉換成 TypeScript 類型
+  getSchemaType(schema): string {
+    if (schema.type === 'array') {
+      const vo = (schema.$ref) ? this.getRefTypeName(schema.$ref) : 'any';
+      return `${vo}[]`;
+    } else {
+      return 'any';
+    }
+  }
+
   genServiceCode() {
 
     const json = this.form.get('json').value;
@@ -48,17 +78,20 @@ export class SwaggerComponent implements OnInit {
 
         let vo = (httpKey === 'post') || (httpKey === 'put') || (httpKey === 'patch') ? ', {}' : '';
         const url = pathKey.replace(/\{/g, '${');
-        const parm = [];
+        const parmList = [];
         if (httpObj[httpKey].parameters) {
-          httpObj[httpKey].parameters.forEach(item => {
-            switch (item.in) {
+          httpObj[httpKey].parameters.forEach(parm => {
+            let parmType = 'any';
+            switch (parm.in) {
               case 'path':
               case 'query':
-                parm.push(item.name);
+                parmType = (parm.type) ? this.getTsType(parm) : 'any';
+                parmList.push(`${parm.name}: ${parmType}`);
                 break;
               case 'body':
-                parm.push(item.name);
-                vo = `, {${item.name}}`;
+                parmType = (parm.schema) ? this.getSchemaType(parm.schema) : 'any';
+                parmList.push(`${parm.name}: ${parmType}`);
+                vo = `, {${parm.name}}`;
                 break;
               default:
                 break;
@@ -70,7 +103,7 @@ export class SwaggerComponent implements OnInit {
         /**
          * ${httpObj[httpKey].summary}
          */
-        ${httpObj[httpKey].operationId}(${parm ? parm.join(', ') : ''}): Observable<any> {
+        ${httpObj[httpKey].operationId}(${parmList ? parmList.join(', ') : ''}): Observable<any> {
           return this.httpClient.${httpKey}<any>(\`${url}\`${vo});
         }
         `;
@@ -201,8 +234,8 @@ export class SwaggerComponent implements OnInit {
         switch (prop.type) {
           case 'array':
             vo = (prop.items.$ref) ?
-              prop.items.$ref.split('/').pop() : prop.items.type === 'string' ?
-                'string' : prop.items.type === 'integer' ?
+              this.getRefTypeName(prop.items.$ref) : (prop.items.type === 'string') ?
+                'string' : (prop.items.type === 'integer') ?
                   'number' : 'any';
             typeObj[propKey] = { type: `${vo}[]`, mock: '[]', desc: prop.description };
             break;
@@ -219,7 +252,7 @@ export class SwaggerComponent implements OnInit {
             typeObj[propKey] = { type: 'boolean', mock: true, desc: prop.description };
             break;
           default:
-            vo = (prop.$ref) ? prop.$ref.split('/').pop() : prop.type;
+            vo = (prop.$ref) ? this.getRefTypeName(prop.$ref) : prop.type;
             typeObj[propKey] = { type: vo, mock: null, desc: prop.description };
             break;
         }
