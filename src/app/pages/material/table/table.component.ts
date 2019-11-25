@@ -175,8 +175,8 @@ export class TableComponent implements OnInit {
 
     masterToggle() {
       this.isAllSelected() ?
-          this.selection.clear() :
-          this.dataSource.data.forEach(row => this.selection.select(row));
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
     }
       `;
     }
