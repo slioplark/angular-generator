@@ -104,7 +104,7 @@ export class TableComponent implements OnInit {
     // add row
     this.codeHtml += `
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onSelectRow(row)"></mat-row>
     `;
 
     // add mat-table
@@ -177,6 +177,11 @@ export class TableComponent implements OnInit {
       this.isAllSelected() ?
         this.selection.clear() :
         this.dataSource.data.forEach(row => this.selection.select(row));
+    }
+
+    onSelectRow(row) {
+      this.selection.toggle(row);
+      }
     }
       `;
     }
