@@ -192,7 +192,8 @@ export class FormComponent implements OnInit {
   getFilterTsTemplate() {
     return `
     filter(list: any[], value: string): string[] {
-      return this.list.filter(item =>
+      if (!value) { return list; }
+      return list.filter(item =>
         item.toLowerCase().indexOf(value.toLowerCase()) >= 0
       );
     }
