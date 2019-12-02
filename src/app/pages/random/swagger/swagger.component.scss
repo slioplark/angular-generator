@@ -1,12 +1,4 @@
-form {
-  textarea {
-    width: 100%;
-    height: calc(100vh - 160px);
-    margin-bottom: -5px;
-    resize: none;
-  }
-}
-.code-tabset {
+nz-tabset {
   textarea {
     width: 100%;
     height: calc(100vh - 235px);

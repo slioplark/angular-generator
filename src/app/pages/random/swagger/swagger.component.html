@@ -3,10 +3,17 @@
   <!-- grid 11 -->
   <div nz-col nzSpan="11">
 
-    <!-- form -->
-    <form nz-form [formGroup]="form">
-      <textarea formControlName="json"></textarea>
-    </form>
+    <!-- tab -->
+    <nz-tabset class="code-tabset">
+
+      <!-- mock -->
+      <nz-tab nzTitle="JSON">
+        <form nz-form [formGroup]="form">
+          <textarea formControlName="json"></textarea>
+        </form>
+      </nz-tab>
+
+    </nz-tabset>
 
   </div>
 
