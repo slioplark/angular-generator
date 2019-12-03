@@ -164,9 +164,9 @@ export class FormComponent implements OnInit {
     return `
     <!-- ${formName} column -->
     <mat-form-field>
-      <input matInput [matDatepicker]="picker" formControlName="${formName}">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
+      <input matInput [matDatepicker]="${formName}Picker" formControlName="${formName}">
+      <mat-datepicker-toggle matSuffix [for]="${formName}Picker"></mat-datepicker-toggle>
+      <mat-datepicker #${formName}Picker></mat-datepicker>
     </mat-form-field>
     `;
   }
