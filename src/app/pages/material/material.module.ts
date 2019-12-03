@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from 'src/app/shared/modules/shared.module';
 
+import { DialogComponent } from './dialog/dialog.component';
 import { FormComponent } from './form/form.component';
 import { MaterialRoutingModule } from './material-routing.module';
 import { TableComponent } from './table/table.component';
@@ -12,7 +13,8 @@ import { TableComponent } from './table/table.component';
   ],
   declarations: [
     FormComponent,
-    TableComponent
+    TableComponent,
+    DialogComponent
   ]
 })
 export class MaterialModule { }
