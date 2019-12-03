@@ -19,6 +19,8 @@ export class DialogComponent implements OnInit {
   codeDialogTypescript: string;
 
   form: FormGroup;
+  formName: string;
+  compName: string;
 
   constructor(
     private formBuilder: FormBuilder
@@ -31,8 +33,9 @@ export class DialogComponent implements OnInit {
   }
 
   onCreate() {
-    // push column name in array
-    const column = this.form.get('column').value;
+    // set formName & compName
+    this.formName = this.form.get('column').value.trim();
+    this.compName = this.formName[0].toUpperCase() + this.formName.slice(1);
 
     // generator code
     this.genHtml();
@@ -50,7 +53,7 @@ export class DialogComponent implements OnInit {
 
   genHtml() {
     this.codeHtml = `
-    <button (click)="openExampleDialog()">Pick one</button>
+    <button (click)="open${this.compName}Dialog()">Pick one</button>
     `;
   }
 
@@ -61,16 +64,16 @@ export class DialogComponent implements OnInit {
 
     constructor(public dialog: MatDialog) {}
 
-    openExampleDialog() {
+    open${this.compName}Dialog() {
 
       const dialogConfig = new MatDialogConfig();
-      dialogConfig.panelClass = 'example-dialog';
+      dialogConfig.panelClass = '${this.formName}-dialog';
       dialogConfig.data = {
         name: this.name,
         animal: this.animal
       };
 
-      let dialogRef = this.dialog.open(ExampleDialog, dialogConfig);
+      let dialogRef = this.dialog.open(${this.compName}Dialog, dialogConfig);
       dialogRef.afterClosed().subscribe(result => {
         console.log(result);
       });
@@ -111,7 +114,7 @@ export class DialogComponent implements OnInit {
 
     constructor(
       @Inject(MAT_DIALOG_DATA) public dialogData: any,
-      public dialogRef: MatDialogRef<ExampleDialog>
+      public dialogRef: MatDialogRef<${this.compName}Dialog>
     ) { }
 
     confirm() {
