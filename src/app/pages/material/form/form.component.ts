@@ -182,7 +182,7 @@ export class FormComponent implements OnInit {
         .pipe(
           startWith<string | any>(''),
           debounceTime(300),
-          map(value => typeof value === 'string' ? value : value.name),
+          map(value => typeof value === 'string' ? value : ''),
           map(value => this.filter(${formName}List, value))
         );
     }
@@ -191,11 +191,11 @@ export class FormComponent implements OnInit {
 
   getFilterTsTemplate() {
     return `
-    filter(list: any[], value: string): string[] {
+    filter(list: string[], value: string): string[] {
       if (!value) { return list; }
-      return list.filter(item =>
-        item.toLowerCase().indexOf(value.toLowerCase()) >= 0
-      );
+      return list
+        .filter(item => item.toLowerCase().indexOf(value.toLowerCase()) >= 0)
+        .sort((a, b) => a.localeCompare(b));
     }
     `;
   }
