@@ -192,7 +192,6 @@ export class FormComponent implements OnInit {
   getFilterTsTemplate() {
     return `
     filter(list: string[], value: string): string[] {
-      if (!value) { return list; }
       return list
         .filter(item => item.toLowerCase().indexOf(value.toLowerCase()) >= 0)
         .sort((a, b) => a.localeCompare(b));
