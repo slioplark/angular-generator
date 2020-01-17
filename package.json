@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "node server.js",
+    "start": "ng serve --open",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
@@ -21,10 +21,8 @@
     "@angular/platform-browser-dynamic": "~8.2.7",
     "@angular/router": "~8.2.7",
     "@types/highlight.js": "^9.12.3",
-    "express": "^4.17.1",
     "highlight.js": "^9.15.10",
     "ng-zorro-antd": "^8.1.2",
-    "path": "^0.12.7",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
@@ -49,9 +47,5 @@
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
     "typescript": "~3.5.3"
-  },
-  "engines": {
-    "node": "~10.16.0",
-    "npm": "~6.9.0"
   }
 }
