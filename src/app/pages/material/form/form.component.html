@@ -6,9 +6,9 @@
     <!-- form -->
     <form nz-form [formGroup]="form" (ngSubmit)="onCreate()">
 
-      <nz-form-item>
-        <nz-form-label [nzSpan]="4">type</nz-form-label>
-        <nz-form-control [nzSpan]="18">
+      <section>
+        <nz-form-label>type</nz-form-label>
+        <nz-form-control>
           <nz-select nzAllowClear formControlName="type" nzPlaceHolder="Choose">
             <nz-option nzLabel="input" nzValue="input"></nz-option>
             <nz-option nzLabel="select" nzValue="select"></nz-option>
@@ -16,20 +16,20 @@
             <nz-option nzLabel="datepicker" nzValue="datepicker"></nz-option>
           </nz-select>
         </nz-form-control>
-      </nz-form-item>
+      </section>
 
-      <nz-form-item>
-        <nz-form-label [nzSpan]="4">name</nz-form-label>
-        <nz-form-control [nzSpan]="18">
+      <section>
+        <nz-form-label>name</nz-form-label>
+        <nz-form-control>
           <input nz-input formControlName="name" />
         </nz-form-control>
-      </nz-form-item>
+      </section>
 
-      <nz-form-item>
-        <nz-form-control [nzSpan]="18" [nzOffset]="4">
+      <section>
+        <nz-form-control>
           <button nz-button nzType="primary" [disabled]="form.invalid">Create</button>
         </nz-form-control>
-      </nz-form-item>
+      </section>
 
     </form>
 
