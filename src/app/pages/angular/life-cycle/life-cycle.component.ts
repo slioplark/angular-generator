@@ -25,6 +25,8 @@ export class LifeCycleComponent implements OnInit {
     `;
     this.codeTypescript += `
       @Input() time: string;
+
+      subscription: Subscription;
     `;
     this.codeTypescript += `
       ngOnChanges(changes: SimpleChanges) {
@@ -65,6 +67,7 @@ export class LifeCycleComponent implements OnInit {
     this.codeTypescript += `
       ngOnDestroy() {
         console.log('OnDestroy');
+        this.subscription.unsubscribe();
       }
     `;
     this.codeTypescript += `
