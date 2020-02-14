@@ -80,7 +80,7 @@ export class TableComponent implements OnInit {
                         [indeterminate]="selection.hasValue() && !isAllSelected()">
           </mat-checkbox>
         </mat-header-cell>
-        <mat-cell *matCellDef="let row">
+        <mat-cell *matCellDef="let row;">
           <mat-checkbox (click)="$event.stopPropagation()"
                         (change)="$event ? selection.toggle(row) : null"
                         [checked]="selection.isSelected(row)">
@@ -96,7 +96,7 @@ export class TableComponent implements OnInit {
       <!-- ${item} column -->
       <ng-container matColumnDef="${item}">
         <mat-header-cell *matHeaderCellDef${this.sort ? ' mat-sort-header' : ''}>{{ '${item}' }}</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{ row?.${item} }}</mat-cell>
+        <mat-cell *matCellDef="let row;">{{ row?.${item} }}</mat-cell>
       </ng-container>
       `;
     });
