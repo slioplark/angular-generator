@@ -72,7 +72,7 @@ export class FormComponent implements OnInit {
 
       // select type
       if (item.formType === 'select') {
-        this.codeHtml += this.getSelectHtmlTemplate(item.formName);;
+        this.codeHtml += this.getSelectHtmlTemplate(item.formName);
       }
 
       // autocomplete type
@@ -137,7 +137,7 @@ export class FormComponent implements OnInit {
     return `
     <!-- ${formName} column -->
     <mat-form-field>
-      <mat-select formControlName="${formName}">
+      <mat-select formControlName="${formName}" (selectionChange)="onSelectionChange()">
         <mat-option *ngFor="let item of ${formName}List" [value]="item">
           {{ item?.name }}
         </mat-option>
@@ -151,7 +151,7 @@ export class FormComponent implements OnInit {
     <!-- ${formName} column -->
     <mat-form-field>
       <input type="text" matInput formControlName="${formName}" [matAutocomplete]="auto${autoName}">
-      <mat-autocomplete #auto${autoName}="matAutocomplete" [displayWith]="display${autoName}Fn">
+      <mat-autocomplete #auto${autoName}="matAutocomplete" [displayWith]="display${autoName}Fn" (optionSelected)="onOptionSelected()">
         <mat-option *ngFor="let item of ${formName}List$ | async" [value]="item">
           {{ item?.name }}
         </mat-option>
@@ -191,7 +191,7 @@ export class FormComponent implements OnInit {
 
   getFilterTsTemplate() {
     return `
-    filter(list: string[], value: string): string[] {
+    filterAndSort(list: string[], value: string): string[] {
       return list
         .filter(item => item.toLowerCase().indexOf(value.toLowerCase()) >= 0)
         .sort((a, b) => a.localeCompare(b));
