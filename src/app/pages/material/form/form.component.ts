@@ -177,6 +177,10 @@ export class FormComponent implements OnInit {
       return value ? value.name : undefined;
     }
 
+    display${autoName}Fn(item: any) {
+      return item ? item.name : undefined;
+    }
+
     get${autoName}List() {
       this.${formName}List$ = this.form.get('${formName}').valueChanges
         .pipe(
