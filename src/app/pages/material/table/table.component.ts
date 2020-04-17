@@ -181,7 +181,6 @@ export class TableComponent implements OnInit {
 
     onSelectRow(row) {
       this.selection.toggle(row);
-      }
     }
       `;
     }
