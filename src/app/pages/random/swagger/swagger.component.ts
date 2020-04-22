@@ -64,7 +64,6 @@ export class SwaggerComponent implements OnInit {
   }
 
   genServiceCode() {
-
     const json = this.form.get('json').value;
     if (!json) { return; }
 
@@ -72,13 +71,43 @@ export class SwaggerComponent implements OnInit {
     let code = '';
     const pathObj = JSON.parse(json).paths;
     Object.keys(pathObj).forEach(pathKey => {
-
       const httpObj = pathObj[pathKey];
       Object.keys(httpObj).forEach(httpKey => {
 
-        let vo = (httpKey === 'post') || (httpKey === 'put') || (httpKey === 'patch') ? ', {}' : '';
+        let voInput = ['post', 'put', 'patch'].includes(httpKey) ? ', {}' : '';
+        let voOutput = 'any';
+        if (
+          httpObj[httpKey]['responses'] &&
+          httpObj[httpKey]['responses']['200'] &&
+          httpObj[httpKey]['responses']['200']['schema'] &&
+          httpObj[httpKey]['responses']['200']['schema']['type']
+        ) {
+          const type = httpObj[httpKey]['responses']['200']['schema']['type'];
+          const schema = httpObj[httpKey]['responses']['200']['schema'];
+          switch (type) {
+            case 'array':
+              voOutput = (schema.items.$ref) ? this.getRefTypeName(schema.items.$ref) : `${schema.items.type}[]`;
+              break;
+            case 'object':
+              voOutput = (schema.additionalProperties.$ref) ? this.getRefTypeName(schema.additionalProperties.$ref) : `${schema.additionalProperties.type}`;
+              break;
+            case 'number':
+            case 'integer':
+              voOutput = 'number';
+              break;
+            case 'string':
+            case 'boolean':
+              voOutput = type;
+              break;
+            default:
+              voOutput = this.getRefTypeName(schema.$ref);
+              break;
+          }
+        }
+
         const url = pathKey.replace(/\{/g, '${');
         const parmList = [];
+
         if (httpObj[httpKey].parameters) {
           httpObj[httpKey].parameters.forEach(parm => {
             let parmType = 'any';
@@ -91,7 +120,7 @@ export class SwaggerComponent implements OnInit {
               case 'body':
                 parmType = (parm.schema) ? this.getSchemaType(parm.schema) : 'any';
                 parmList.push(`${parm.name}: ${parmType}`);
-                vo = `, ${parm.name}`;
+                voInput = `, ${parm.name}`;
                 break;
               default:
                 break;
@@ -103,20 +132,17 @@ export class SwaggerComponent implements OnInit {
         /**
          * ${httpObj[httpKey].summary}
          */
-        ${httpObj[httpKey].operationId}(${parmList ? parmList.join(', ') : ''}): Observable<any> {
-          return this.httpClient.${httpKey}<any>(\`${url}\`${vo});
+        ${httpObj[httpKey].operationId}(${parmList ? parmList.join(', ') : ''}): Observable<${voOutput}> {
+          return this.httpClient.${httpKey}<${voOutput}>(\`${url}\`${voInput});
         }
         `;
       });
-
     });
 
     return code;
-
   }
 
   genMockCode() {
-
     let code = '';
     Object.keys(this.mockObj).forEach(mockKey => {
 
@@ -151,11 +177,9 @@ export class SwaggerComponent implements OnInit {
     });
 
     return code;
-
   }
 
   genModelCode() {
-
     let code = '';
     const list = [];
     Object.keys(this.mockObj).forEach(mockKey => {
@@ -206,11 +230,9 @@ export class SwaggerComponent implements OnInit {
     });
 
     return code;
-
   }
 
   getMockObj() {
-
     // swagger string
     const json = this.form.get('json').value;
     if (!json) { return; }
@@ -271,7 +293,6 @@ export class SwaggerComponent implements OnInit {
       this.mockObj[defKey] = typeObj;
 
     });
-
   }
 
 }
