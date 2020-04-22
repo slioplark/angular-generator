@@ -91,7 +91,7 @@ export class SwaggerComponent implements OnInit {
               case 'body':
                 parmType = (parm.schema) ? this.getSchemaType(parm.schema) : 'any';
                 parmList.push(`${parm.name}: ${parmType}`);
-                vo = `, {${parm.name}}`;
+                vo = `, ${parm.name}`;
                 break;
               default:
                 break;
@@ -233,10 +233,11 @@ export class SwaggerComponent implements OnInit {
         let vo = '';
         switch (prop.type) {
           case 'array':
-            vo = (prop.items.$ref) ?
-              this.getRefTypeName(prop.items.$ref) : (prop.items.type === 'string') ?
-                'string' : (prop.items.type === 'integer') ?
-                  'number' : 'any';
+            vo = (
+              (prop.items.$ref) ? this.getRefTypeName(prop.items.$ref) :
+                (prop.items.type === 'string') ? 'string' : (prop.items.type === 'integer') ?
+                  'number' : 'any'
+            );
             typeObj[propKey] = { type: `${vo}[]`, mock: '[]', desc: prop.description };
             break;
           case 'string':
