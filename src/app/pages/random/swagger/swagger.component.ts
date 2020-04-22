@@ -82,8 +82,28 @@ export class SwaggerComponent implements OnInit {
     const json = this.form.get('json').value;
     if (!json) { return; }
 
+    let code = `
+        /**
+         * 取得 query string
+         */
+        getParams(obj: object) {
+          let params = new HttpParams();
+          const keys = Object.keys(obj);
+          const checkList = [undefined, null, ''];
+          for (const key of keys) {
+            const value = obj[key];
+            if (checkList.includes(value)) { continue; }
+            if (value instanceof Array) {
+              value.forEach(item => params = params.append(key, <any>item));
+            } else {
+              params = params.set(key, <any>value);
+            }
+          }
+          return params;
+        }
+    `;
+
     // path object
-    let code = '';
     const pathObj = JSON.parse(json).paths;
     Object.keys(pathObj).forEach(pathKey => {
       const httpObj = pathObj[pathKey];
@@ -108,9 +128,13 @@ export class SwaggerComponent implements OnInit {
             let parmType = 'any';
             switch (parm.in) {
               case 'path':
+                parmType = (parm.type) ? this.getTsType(parm) : 'any';
+                parmList.push(`${parm.name}: ${parmType}`);
+                break;
               case 'query':
                 parmType = (parm.type) ? this.getTsType(parm) : 'any';
                 parmList.push(`${parm.name}: ${parmType}`);
+                voInput = ', { params: params }';
                 break;
               case 'body':
                 parmType = (parm.schema) ? this.getSchemaType(parm.schema) : 'any';
