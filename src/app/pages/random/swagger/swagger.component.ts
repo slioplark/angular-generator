@@ -143,7 +143,7 @@ export class SwaggerComponent implements OnInit {
 
       // vo name
       code += `
-      export const ${mockKey}: ${mockKey} = {`;
+      export const ${mockKey.trim().replace(' ', '_')}: ${mockKey.trim().replace(' ', '_')} = {`;
 
       // prop name
       const prop = this.mockObj[mockKey];
@@ -181,7 +181,7 @@ export class SwaggerComponent implements OnInit {
 
       // vo name
       code += `
-      export interface ${mockKey} {`;
+      export interface ${mockKey.trim().replace(' ', '_')} {`;
 
       // prop name
       const prop = this.mockObj[mockKey];
