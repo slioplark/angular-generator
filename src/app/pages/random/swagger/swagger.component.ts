@@ -55,12 +55,27 @@ export class SwaggerComponent implements OnInit {
 
   // 依據 swagger schema，轉換成 TypeScript 類型
   getSchemaType(schema): string {
-    if (schema.type === 'array') {
-      const vo = (schema.$ref) ? this.getRefTypeName(schema.$ref) : 'any';
-      return `${vo}[]`;
-    } else {
-      return 'any';
+    let vo = 'any';
+    switch (schema.type) {
+      case 'array':
+        vo = (schema.items.$ref) ? this.getRefTypeName(schema.items.$ref) : `${schema.items.type}[]`;
+        break;
+      case 'object':
+        vo = (schema.additionalProperties.$ref) ? this.getRefTypeName(schema.additionalProperties.$ref) : `${schema.additionalProperties.type}`;
+        break;
+      case 'number':
+      case 'integer':
+        vo = 'number';
+        break;
+      case 'string':
+      case 'boolean':
+        vo = schema.type;
+        break;
+      default:
+        vo = this.getRefTypeName(schema.$ref);
+        break;
     }
+    return vo;
   }
 
   genServiceCode() {
@@ -79,30 +94,10 @@ export class SwaggerComponent implements OnInit {
         if (
           httpObj[httpKey]['responses'] &&
           httpObj[httpKey]['responses']['200'] &&
-          httpObj[httpKey]['responses']['200']['schema'] &&
-          httpObj[httpKey]['responses']['200']['schema']['type']
+          httpObj[httpKey]['responses']['200']['schema']
         ) {
-          const type = httpObj[httpKey]['responses']['200']['schema']['type'];
           const schema = httpObj[httpKey]['responses']['200']['schema'];
-          switch (type) {
-            case 'array':
-              voOutput = (schema.items.$ref) ? this.getRefTypeName(schema.items.$ref) : `${schema.items.type}[]`;
-              break;
-            case 'object':
-              voOutput = (schema.additionalProperties.$ref) ? this.getRefTypeName(schema.additionalProperties.$ref) : `${schema.additionalProperties.type}`;
-              break;
-            case 'number':
-            case 'integer':
-              voOutput = 'number';
-              break;
-            case 'string':
-            case 'boolean':
-              voOutput = type;
-              break;
-            default:
-              voOutput = this.getRefTypeName(schema.$ref);
-              break;
-          }
+          voOutput = this.getSchemaType(schema);
         }
 
         const url = pathKey.replace(/\{/g, '${');
