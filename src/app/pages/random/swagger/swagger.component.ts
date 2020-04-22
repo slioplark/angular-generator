@@ -257,8 +257,8 @@ export class SwaggerComponent implements OnInit {
           case 'array':
             vo = (
               (prop.items.$ref) ? this.getRefTypeName(prop.items.$ref) :
-                (prop.items.type === 'string') ? 'string' : (prop.items.type === 'integer') ?
-                  'number' : 'any'
+                (prop.items.type === 'string') ? 'string' :
+                  (prop.items.type === 'integer') ? 'number' : 'any'
             );
             typeObj[propKey] = { type: `${vo}[]`, mock: '[]', desc: prop.description };
             break;
