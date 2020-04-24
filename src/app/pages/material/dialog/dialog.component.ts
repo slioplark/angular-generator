@@ -73,9 +73,9 @@ export class DialogComponent implements OnInit {
         animal: this.animal
       };
 
-      let dialogRef = this.dialog.open(${this.compName}Dialog, dialogConfig);
-      dialogRef.afterClosed().subscribe(result => {
-        console.log(result);
+      const dialogRef = this.dialog.open(${this.compName}Dialog, dialogConfig);
+      dialogRef.afterClosed().subscribe(val => {
+        console.log(val);
       });
 
     }
