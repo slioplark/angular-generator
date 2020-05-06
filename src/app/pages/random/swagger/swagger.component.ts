@@ -58,7 +58,7 @@ export class SwaggerComponent implements OnInit {
     let vo = 'any';
     switch (schema.type) {
       case 'array':
-        vo = (schema.items.$ref) ? this.getRefTypeName(schema.items.$ref) : `${schema.items.type}[]`;
+        vo = (schema.items.$ref) ? `${this.getRefTypeName(schema.items.$ref)}[]` : `${schema.items.type}[]`;
         break;
       case 'object':
         vo = (schema.additionalProperties.$ref) ? this.getRefTypeName(schema.additionalProperties.$ref) : `${schema.additionalProperties.type}`;
